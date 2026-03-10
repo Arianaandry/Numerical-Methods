@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import csv
 import math
+import os
 
 # ==========================================
 # ЗАГАЛЬНІ МАТЕМАТИЧНІ ФУНКЦІЇ
@@ -51,26 +52,10 @@ def read_data(filename):
     return np.array(x), np.array(y)
 
 try:
-    x_data, y_data = read_data("data.csv")
+    x_data, y_data = read_data(r"D:\projects\Projects_alpha\NM\Lab_2\data.csv")
     coef_newton = divided_differences(x_data, y_data)
 
-    # --- Табуляція інтерпольованої функції ---
-    x0 = min(x_data)
-    xn = max(x_data)
-    n_nodes = 20
-    h = (xn - x0) / n_nodes
-
-    x_tab = np.array([x0 + i*h for i in range(n_nodes + 1)])
-    y_tab = [newton_polynomial(coef_newton, x_data, xi) for xi in x_tab]
-
-    with open("tabulated_data.txt", "w", encoding="utf-8") as f:
-        f.write("x\tInterpolated_y\n")
-        for xi, yi in zip(x_tab, y_tab):
-            f.write(f"{xi:.6f}\t{yi:.6f}\n")
-
-    print("Табуляція виконана, дані збережено у 'tabulated_data.txt'")
-
-    # Далі йде прогноз та побудова графіку
+    
     x_target = 120000
     y_pred_newton = newton_polynomial(coef_newton, x_data, x_target)
 
@@ -80,7 +65,7 @@ try:
     plt.figure(figsize=(10, 6))
     plt.plot(x_plot, y_plot_newton, label='Метод Ньютона', color='blue', linewidth=2)
     plt.scatter(x_data, y_data, color='red', s=60, label='Експериментальні дані')
-    plt.scatter([x_target], [y_pred_newton], color='cyan', s=120, marker='*', edgecolor='black', label=f'Прогноз ({y_pred_newton:.1f})')
+    plt.scatter([x_target], [y_pred_newton], color='cyan', s=120, marker='*', label=f'Прогноз ({y_pred_newton:.1f})')
     plt.title('Варіант 3: Прогноз часу тренування')
     plt.xlabel('Розмір датасету')
     plt.ylabel('Час тренування (сек)')
