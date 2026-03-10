@@ -9,20 +9,16 @@ def load_data(filename):
         with open(filename, mode='r', encoding='utf-8') as f:
             reader = csv.DictReader(f)
             for row in reader:
-                # Передбачаємо, що колонки називаються 'Month' та 'Temp'
                 months.append(float(row['Month']))
                 temps.append(float(row['Temp']))
     except FileNotFoundError:
-        # Створення фіктивних даних, якщо файл відсутній (для демонстрації)
-        print(f"Файл {filename} не знайдено. Використовуються тестові дані.")
-        months = list(range(1, 25))
-        temps = [10 + 5*np.sin(i/2) + np.random.normal(0, 0.5) for i in months]
+        print(f"Файл {filename} не знайдено.")
     
     return np.array(months, dtype=np.float64), np.array(temps, dtype=np.float64)
 
 x, y = load_data('data.csv')
 
-# 2. Функції Методу найменших квадратів (МНК)
+# Функції Методу найменших квадратів (МНК)
 def form_matrix(x, m):
     """ Формування матриці системи """
     A = np.zeros((m + 1, m + 1), dtype=np.float64)
@@ -74,10 +70,10 @@ def variance(y_true, y_approx):
     """ Дисперсія (похибка) """
     return np.sum((y_true - y_approx) ** 2) / (len(y_true) + 1)
 
-# 3. Вибір оптимального ступеня полінома
+# Вибір оптимального ступеня полінома
 max_degree = 10
 variances = []
-optimal_m = 3 # Фіксований ступінь за запитом
+optimal_m = 3 # Фіксований ступінь
 
 print("--- Дисперсії для різних степенів ---")
 for m in range(1, max_degree + 1):
@@ -89,15 +85,15 @@ for m in range(1, max_degree + 1):
     variances.append(var)
     print(f"Ступінь m={m}: дисперсія = {var:.4f}")
 
-# 4. Підготовка даних для основного прогнозу (m=3)
+# Підготовка даних для основного прогнозу (m=3)
 coef_opt = gauss_solve(form_matrix(x, optimal_m), form_vector(x, y, optimal_m))
 y_approx_opt = polynomial(x, coef_opt)
 
-# 5. Екстраполяція (Прогноз)
+# Прогноз
 x_future = np.array([25, 26, 27], dtype=np.float64)
 y_future_opt = polynomial(x_future, coef_opt)
 
-# Розрахунок коефіцієнтів для m=10 для окремого графіка та прогнозу
+# Підготовка даних для демонстраційного прогнозу (m=10) та прогноз
 m_high = 10
 coef_high = gauss_solve(form_matrix(x, m_high), form_vector(x, y, m_high))
 y_future_high = polynomial(x_future, coef_high)
@@ -105,10 +101,10 @@ y_future_high = polynomial(x_future, coef_high)
 print(f"\n=> Прогноз (m=3) на 25, 26, 27 місяці: {np.round(y_future_opt, 2)}")
 print(f"=> Прогноз (m=10) на 25, 26, 27 місяці: {np.round(y_future_high, 2)}")
 
-# 7. Побудова графіків
+# Побудова графіків
 plt.figure(figsize=(16, 10))
 
-# Графік 1: Прогноз на три місяці (m=3)
+# Прогноз на три місяці (m=3)
 plt.subplot(2, 2, 1)
 plt.plot(x, y, 'o', label='Фактичні дані', color='blue')
 x_dense = np.linspace(min(x), max(x), 100)
@@ -118,7 +114,7 @@ plt.title('Прогноз на три місяці')
 plt.grid(True)
 plt.legend()
 
-# Графік 2: Залежність дисперсії від степеня m
+# Залежність дисперсії від степеня m
 plt.subplot(2, 2, 2)
 m_values = list(range(1, max_degree + 1))
 plt.plot(m_values, variances, marker='s', color='blue', linestyle='-')
@@ -128,11 +124,9 @@ plt.ylabel('Дисперсія')
 plt.xticks(m_values)
 plt.grid(True)
 
-# Графік 3: Графік похибки апроксимацій з градієнтом кольору
+# Графік похибки апроксимацій
 plt.subplot(2, 2, 3)
 for m in range(1, max_degree + 1):
-    # Розрахунок кольору: від червоного (m=1) до зеленого (m=10)
-    # Формат RGB: red зменшується від 1 до 0, green збільшується від 0 до 1
     color_val = (m - 1) / (max_degree - 1)
     line_color = (1 - color_val, color_val, 0)
     
@@ -149,7 +143,7 @@ plt.ylabel('Похибка')
 plt.grid(True)
 plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left', fontsize='small')
 
-# Графік 4: Апроксимація 10-м степенем з прогнозом
+# Апроксимація 10-м степенем
 plt.subplot(2, 2, 4)
 x_dense_high = np.linspace(min(x), max(x), 200)
 y_high_dense = polynomial(x_dense_high, coef_high)

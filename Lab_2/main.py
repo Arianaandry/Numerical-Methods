@@ -4,11 +4,7 @@ import csv
 import math
 import os
 
-# ==========================================
-# ЗАГАЛЬНІ МАТЕМАТИЧНІ ФУНКЦІЇ
-# ==========================================
-
-# 1. Розділені різниці та Метод Ньютона
+# Розділені різниці та Метод Ньютона
 def divided_differences(x, y):
     n = len(y)
     coef = np.zeros([n, n])
@@ -25,7 +21,7 @@ def newton_polynomial(coef, x_data, x_val):
         p = coef[n - k] + (x_val - x_data[n - k]) * p
     return p
 
-# 2. Метод Лагранжа
+# Метод Лагранжа
 def lagrange_polynomial(x_data, y_data, x_val):
     result = 0.0
     n = len(x_data)
@@ -37,9 +33,6 @@ def lagrange_polynomial(x_data, y_data, x_val):
         result += term
     return result
 
-# ==========================================
-# ЧАСТИНА 1: ВАРІАНТ 3 (Модель машинного навчання)
-# ==========================================
 print("=== ЧАСТИНА 1: ВАРІАНТ 3 ===")
 
 def read_data(filename):
@@ -75,14 +68,11 @@ try:
 except FileNotFoundError:
     print("Файл data.csv не знайдено. Пропускаю ЧАСТИНУ 1.")
 
-# ==========================================
-# ЧАСТИНА 2: ДОСЛІДНИЦЬКА ЧАСТИНА
-# ==========================================
 print("=== ЧАСТИНА 2: ДОСЛІДНИЦЬКА ЧАСТИНА ===")
 nodes_list = [5, 10, 20]
 colors = ['blue', 'green', 'red']
 
-# --- Пункт 1: Вплив кроку (Фіксований інтервал [0, 2pi], різна кількість вузлів) ---
+# Вплив кроку (Фіксований інтервал [0, 2pi], різна кількість вузлів) ---
 def test_func_1(x): return np.sin(x)
 a1, b1 = 0, 2 * np.pi
 x_dense_1 = np.linspace(a1, b1, 1000)
