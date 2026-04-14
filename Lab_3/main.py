@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import csv
 
+
 def load_data(filename):
     months = []
     temps = []
