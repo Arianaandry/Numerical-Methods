@@ -3,7 +3,7 @@ import numpy as np
 from random import randint
 
 from LU import B_solve, L_U_solve, LU_error, solve_SLAE
-from clarification import clarification_SLAE
+from refinement import i_refinement_SLAE
 
 def main():
 
@@ -29,7 +29,7 @@ def main():
     print(f"\nПохибка LU розкладу: {error:.18f}")
 
     print()
-    clarification_SLAE(X_calc, n, A, B, L, U)
+    i_refinement_SLAE(X_calc, n, A, B, L, U)
 
 if __name__ == "__main__":
     main()
